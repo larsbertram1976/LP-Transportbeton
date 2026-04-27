@@ -1,6 +1,6 @@
 # PROJ-1: Page Shell & Hero-Sektion
 
-## Status: Approved
+## Status: Deployed
 **Created:** 2026-04-27
 **Last Updated:** 2026-04-27
 
@@ -309,4 +309,39 @@ public/
 - **Recommendation:** Status auf **Approved**. Vor Live-Gang: (1) BUG-1 Kontrast prüfen/fixen, (2) Lighthouse manuell laufen lassen, (3) `/seo` für robots-Meta + finale OG-Tags, (4) `/deploy` für Security-Headers.
 
 ## Deployment
-_To be added by /deploy_
+
+**Deployed:** 2026-04-27
+**Production URL:** https://moelders-transportbeton.vercel.app
+**Vercel Project:** [moelders-transportbeton](https://vercel.com/larsbertrams-projects/moelders-transportbeton) (`prj_7vCmbiPPycvWRjCBp0NWL6kYShT9`)
+**Deployment ID:** `dpl_A1GBMeFv33VWsohy5ozYk5BhipzQ` (commit `1984c55`)
+**Build:** 41 s, Type `LAMBDAS`, Region `iad1`
+
+### Aliases
+- `moelders-transportbeton.vercel.app` (canonical)
+- `moelders-transportbeton-larsbertrams-projects.vercel.app`
+- `moelders-transportbeton-git-main-larsbertrams-projects.vercel.app`
+
+### Auto-Deploy
+GitHub `larsbertram1976/LP-Transportbeton` Branch `main` → Vercel Auto-Deploy via GitHub App.
+
+### Deployment Notes
+- Erstes Deployment (Commit `c6e43d7`) lief technisch sauber durch, lieferte aber 404 auf alle Routes, weil das Vercel-Projekt **vor** dem ersten Push erstellt wurde — `framework: null` blieb im Projekt-Setting hängen, Vercel wusste nicht, wie Next.js-Output zu routen ist.
+- Fix in [vercel.json](../vercel.json): `{"framework": "nextjs"}` → Commit `1984c55` triggert automatisch ein zweites Deployment, das den Fix einspielt. State **READY**, Live-URL antwortet 200, korrektes SSG-Prerendering, Mölders-Branding sichtbar.
+
+### Smoketest gegen Live (2026-04-27)
+- HTTP 200 ✓
+- `<html lang="de">` ✓
+- Title, Meta-Description, OG-Tags, Twitter Card ✓
+- H1 "Transportbeton aus der Region — geliefert von Mölders." ✓
+- 4 Vertrauensanker, Hero-Visual ("C20/25 bis C30/37") ✓
+- Footer + Outbound-Links zu moelders.de/impressum / /datenschutz ✓
+- HSTS-Header von Vercel automatisch gesetzt
+- `x-nextjs-prerender: 1` + `x-vercel-cache: PRERENDER` → SSG greift
+
+### Offen (nicht blockierend)
+- Production-Header X-Frame-Options, X-Content-Type-Options, Referrer-Policy, CSP — werden durch `next.config.ts` Headers oder `vercel.json` Headers nachgereicht (siehe [docs/production/security-headers.md](../docs/production/security-headers.md))
+- Lighthouse-Run gegen Live-URL noch ausstehend
+- BUG-1 Kontrast (Badge) — vom User auf "später" verschoben
+- Vercel-Project-Setting `framework` ist im Dashboard immer noch `null` — vercel.json überschreibt das, aber für Konsistenz im Dashboard auf "Next.js" umstellen
+- SEO/GEO: `/seo` wurde übersprungen — `robots.txt`, `sitemap.xml`, JSON-LD und Schema-Markup fehlen noch
+- Custom-Domain `transportbeton.moelders.de` (im canonical-Tag bereits referenziert) — DNS muss bei Mölders gepflegt werden, dann in Vercel als Domain hinzufügen

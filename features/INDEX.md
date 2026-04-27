@@ -14,7 +14,7 @@
 
 | ID | Feature | Status | Spec | Created |
 |----|---------|--------|------|---------|
-| PROJ-1 | Page Shell & Hero-Sektion | Approved | [PROJ-1-page-shell-and-hero.md](PROJ-1-page-shell-and-hero.md) | 2026-04-27 |
+| PROJ-1 | Page Shell & Hero-Sektion | Deployed | [PROJ-1-page-shell-and-hero.md](PROJ-1-page-shell-and-hero.md) | 2026-04-27 |
 | PROJ-2 | Produktübersicht Transportbeton-Sorten | Planned | [PROJ-2-produktuebersicht-betonsorten.md](PROJ-2-produktuebersicht-betonsorten.md) | 2026-04-27 |
 
 <!-- Add features above this line -->
