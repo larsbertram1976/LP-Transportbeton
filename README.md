@@ -4,6 +4,8 @@
 
 This template uses [Claude Code](https://docs.anthropic.com/en/docs/claude-code) with modern Skills, Rules, and Sub-Agents to provide a complete AI-powered development workflow.
 
+> **Building a new app from this framework?** This repo is a **GitHub Template Repository**. Click the green **"Use this template"** button at the top of the repo page → **Create a new repository** to spin up your own independent project (fresh git history, your own account/org). Then continue with **Prerequisites & Setup** below — but in step 4, clone *your new repo*, not this one.
+
 ## Prerequisites & Setup
 
 This section lists **everything** you need to install and which accounts to create — split into "required to run the framework", "required for the AI workflow", and "optional per use case".
@@ -42,18 +44,24 @@ Claude Code authenticates against your Anthropic account on first launch. Two op
 
 You only need one. Both give access to the full skill workflow.
 
-### 4. Clone & Install the Framework
+### 4. Clone & Install
+
+**If you used "Use this template"** (recommended for new apps): clone *your new repo* — replace the URL accordingly:
 
 ```bash
-git clone https://github.com/larsbertram1976/becoss-coding-framework.git my-project
+git clone https://github.com/YOUR_USERNAME/YOUR_NEW_REPO.git my-project
 cd my-project
 npm install
 npx playwright install chromium   # one-time, ~300 MB, needed for E2E tests
 ```
 
-If you're forking this for a new project, point origin to your own repo:
+**If you want to inspect or contribute to the framework itself:**
+
 ```bash
-git remote set-url origin https://github.com/YOUR_USERNAME/your-repo.git
+git clone https://github.com/larsbertram1976/becoss-coding-framework.git
+cd becoss-coding-framework
+npm install
+npx playwright install chromium
 ```
 
 ### 5. Optional Service Accounts
@@ -114,7 +122,8 @@ npm install -g @anthropic-ai/claude-code
 claude   # follow auth flow on first run
 
 # 3. Project (per project)
-git clone https://github.com/larsbertram1976/becoss-coding-framework.git my-project
+#    First create your repo via "Use this template" on GitHub, then:
+git clone https://github.com/YOUR_USERNAME/YOUR_NEW_REPO.git my-project
 cd my-project
 npm install
 npx playwright install chromium
