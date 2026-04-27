@@ -26,6 +26,7 @@ Read these files to understand where the project stands:
 3. **Check Feature Specs:** For each feature in INDEX.md, check if:
    - Tech Design section exists (added by /architecture)
    - QA Test Results section exists (added by /qa)
+   - SEO & GEO section exists (added by /seo)
    - Deployment section exists (added by /deploy)
 
 4. **Check Codebase:** Quick scan of what's been built
@@ -59,8 +60,12 @@ Based on the state analysis, determine what the user should do next:
 > Feature PROJ-X is implemented and ready for testing.
 > Run `/qa` to test `features/PROJ-X-name.md` against its acceptance criteria.
 
-**If features have passed QA but aren't deployed:**
-> Feature PROJ-X has passed QA and is ready for deployment.
+**If features have passed QA but no SEO section yet (and have public-facing pages):**
+> Feature PROJ-X is QA-approved. Run `/seo` to add metadata, structured data and sitemap entries before deployment.
+> Skip `/seo` only for internal/admin features without public pages.
+
+**If features have passed QA + SEO (or SEO not applicable) but aren't deployed:**
+> Feature PROJ-X is ready for deployment.
 > Run `/deploy` to deploy to production.
 
 **If all features are deployed:**
@@ -72,7 +77,7 @@ Based on the state analysis, determine what the user should do next:
 
 If the user asked a specific question (via arguments), answer it in the context of the current project state. Common questions:
 
-- "What skills are available?" → List all 6 skills with brief descriptions
+- "What skills are available?" → List all 7 skills with brief descriptions (requirements, architecture, frontend, backend, qa, seo, deploy)
 - "How do I add a new feature?" → Explain `/requirements` workflow
 - "How do I customize this template?" → Point to CLAUDE.md, rules/, skills/
 - "What's the project structure?" → Explain the directory layout

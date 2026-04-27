@@ -1,6 +1,6 @@
 # becoss Coding Framework
 
-> A Next.js template with an AI-powered development workflow using specialized skills for Requirements, Architecture, Frontend, Backend, QA, and Deployment.
+> A Next.js template with an AI-powered development workflow using specialized skills for Requirements, Architecture, Frontend, Backend, QA, SEO/GEO, and Deployment.
 
 ## Tech Stack
 
@@ -34,7 +34,8 @@ docs/
 3. `/frontend` - Build UI components (shadcn/ui first!)
 4. `/backend` - Build APIs, database, RLS policies
 5. `/qa` - Test against acceptance criteria + security audit
-6. `/deploy` - Deploy to Vercel + production-ready checks
+6. `/seo` - Optimize for search engines (SEO) and AI/LLM crawlers (GEO)
+7. `/deploy` - Deploy to Vercel + production-ready checks
 
 ## Feature Tracking
 

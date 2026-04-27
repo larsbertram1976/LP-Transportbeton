@@ -1,6 +1,6 @@
 # becoss Coding Framework
 
-> Build production-ready web apps faster with AI-powered Skills handling Requirements, Architecture, Development, QA, and Deployment.
+> Build production-ready web apps faster with AI-powered Skills handling Requirements, Architecture, Development, QA, SEO/GEO, and Deployment.
 
 This template uses [Claude Code](https://docs.anthropic.com/en/docs/claude-code) with modern Skills, Rules, and Sub-Agents to provide a complete AI-powered development workflow.
 
@@ -162,6 +162,7 @@ Build features one at a time using the skill chain:
 /frontend        Build the UI
 /backend         Build the API (if needed)
 /qa              Test against acceptance criteria + security audit
+/seo             Optimize for search engines (SEO) and AI/LLM crawlers (GEO)
 /deploy          Deploy to Vercel
 ```
 
@@ -188,6 +189,7 @@ npx shadcn@latest add [component-name]
 | Frontend Developer | `/frontend` | Builds UI with React, Tailwind CSS, and shadcn/ui |
 | Backend Developer | `/backend` | Builds APIs, database schemas, RLS policies with Supabase |
 | QA Engineer | `/qa` | Tests features against acceptance criteria + security audit |
+| SEO Engineer | `/seo` | Optimizes for search engines (SEO) and AI/LLM crawlers (GEO) — metadata, JSON-LD, sitemap, robots.txt, llms.txt |
 | DevOps | `/deploy` | Deploys to Vercel with production-ready checks |
 | Help | `/help` | Context-aware guide: shows where you are and what to do next |
 
@@ -195,7 +197,7 @@ npx shadcn@latest add [component-name]
 
 - **Skills** are defined in `.claude/skills/` and auto-discovered by Claude Code
 - **Rules** in `.claude/rules/` are auto-applied based on file context (no manual loading)
-- **Sub-Agents** run heavy tasks (frontend, backend, QA) in isolated contexts for cost efficiency
+- **Sub-Agents** run heavy tasks (frontend, backend, QA, SEO) in isolated contexts for cost efficiency
 - **CLAUDE.md** provides project context automatically at every session start
 
 ---
@@ -208,7 +210,8 @@ npx shadcn@latest add [component-name]
 3. Build     /frontend      -->  UI components implemented
              /backend       -->  APIs + database (if needed)
 4. Test      /qa            -->  Test results added to feature spec
-5. Ship      /deploy        -->  Deployed to Vercel
+5. Optimize  /seo           -->  SEO + GEO section added (skip for internal-only features)
+6. Ship      /deploy        -->  Deployed to Vercel
 ```
 
 ### Feature Tracking
@@ -257,12 +260,14 @@ becoss-coding-framework/
 |   |   +-- frontend/SKILL.md            /frontend (runs as sub-agent)
 |   |   +-- backend/SKILL.md             /backend (runs as sub-agent)
 |   |   +-- qa/SKILL.md                  /qa (runs as sub-agent)
+|   |   +-- seo/SKILL.md                 /seo (runs as sub-agent)
 |   |   +-- deploy/SKILL.md              /deploy
 |   |   +-- help/SKILL.md                /help
 |   +-- agents/                      <-- Sub-agent configs
 |       +-- frontend-dev.md              Model, tools, limits
 |       +-- backend-dev.md
 |       +-- qa-engineer.md
+|       +-- seo-engineer.md
 +-- features/                        <-- Feature specifications
 |   +-- INDEX.md                         Status tracking
 |   +-- README.md                        Spec format documentation
@@ -335,6 +340,42 @@ npx playwright install chromium
 
 ---
 
+## SEO & GEO Strategy
+
+After QA passes, the `/seo` skill optimizes the feature for both classic search engines and AI/LLM crawlers (ChatGPT, Perplexity, Claude, Google AI Overviews). Two layers, like testing — one stable, one experimental.
+
+### Layer 1: SEO (stable, mandatory)
+
+For every public-facing page in a feature, `/seo` adds:
+
+- **Page metadata** via Next.js `generateMetadata()` — `title`, `description`, OG/Twitter cards, canonical URL
+- **Structured data** (JSON-LD) — picks the right schema per content type (`Article`, `Product`, `FAQPage`, `BreadcrumbList`, `Organization`, `Person`, `Event`, `HowTo`)
+- **OG images** — static or dynamically generated via `opengraph-image.tsx` + `next/og`
+- **Sitemap entry** — added to `src/app/sitemap.ts`
+- **Lighthouse SEO audit** — target ≥ 95 per page (actual score, run via `npx lighthouse`)
+
+Site-level baseline (`metadataBase`, `sitemap.ts`, `robots.ts`, `manifest.ts`) is set up automatically on first run.
+
+### Layer 2: GEO (experimental, best-effort)
+
+Generative Engine Optimization makes content discoverable and citation-friendly to AI crawlers. Standards are still evolving (`llms.txt` was proposed in 2024 by Anthropic), so `/seo` flags GEO items explicitly as experimental in the feature spec:
+
+- **`public/llms.txt`** — markdown summary of the site for LLM crawlers, with key URLs and content categories
+- **`public/llms-full.txt`** (optional) — full content snapshots for citation
+- **Citation-friendly structure** — clear `<h1>`/`<h2>`/`<h3>` hierarchy, semantic `<article>`/`<section>`, FAQ Q&A blocks paired with `FAQPage` schema
+- **E-E-A-T signals** — Experience, Expertise, Authority, Trust via `Organization` + `Person` schema, `sameAs` links to social profiles, author bylines with `datePublished`/`dateModified`
+- **No LLM-blocking patterns** — important content in initial HTML (Server Components), no canvas/image-only text, no login walls in front of indexable content
+
+### When to skip `/seo`
+
+Only for features without public-facing pages — internal admin tools, dashboards behind auth that should not be indexed. The skill asks before touching anything.
+
+### How SEO/GEO gets written
+
+You don't write metadata by hand. The `/seo` skill ([.claude/skills/seo/SKILL.md](.claude/skills/seo/SKILL.md)) reads the feature spec, runs the site baseline if missing, then generates per-page metadata, JSON-LD, OG images and sitemap entries. It runs Lighthouse audits and validates JSON-LD against [Google Rich Results Test](https://search.google.com/test/rich-results) before reporting back. Run `/seo features/PROJ-X-name.md` after `/qa` passes.
+
+---
+
 ## How It Works Under the Hood
 
 ### Skills (`.claude/skills/`)
@@ -347,6 +388,7 @@ Each skill is a structured workflow that Claude Code discovers automatically. Sk
 | `/frontend` | Sub-agent (forked) | Heavy file editing, lots of output |
 | `/backend` | Sub-agent (forked) | Heavy file editing, SQL, API code |
 | `/qa` | Sub-agent (forked) | Systematic testing, lots of output |
+| `/seo` | Sub-agent (forked) | Multi-file metadata edits, audits, schema generation |
 | `/deploy` | Inline | Deployment needs user oversight |
 | `/help` | Inline | Quick status check and guidance |
 

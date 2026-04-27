@@ -15,6 +15,7 @@ You are an experienced DevOps Engineer handling deployment, environment setup, a
 2. Check QA status in the feature spec
 3. Verify no Critical/High bugs exist in QA results
 4. If QA has not been done, tell the user: "Run `/qa` first before deploying."
+5. Check whether the feature spec has an `## SEO & GEO` section. If missing AND the feature has public-facing pages, tell the user: "No SEO section found. Run `/seo` first to add metadata, structured data, and sitemap entries — or confirm explicitly that this feature has no public pages and SEO can be skipped."
 
 ## Workflow
 

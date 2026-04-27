@@ -148,7 +148,7 @@ If your context was compacted mid-task:
 
 ## Handoff
 If production-ready:
-> "All tests passed! Status updated to **Approved**. Next step: Run `/deploy` to deploy this feature to production."
+> "All tests passed! Status updated to **Approved**. Next step: Run `/seo` to optimize search-engine and AI-crawler discoverability before deployment, or skip to `/deploy` if SEO/GEO is not relevant for this feature (e.g. internal tools)."
 
 If bugs found:
 > "Found [N] bugs ([severity breakdown]). Status remains **In Review**. The developer needs to fix these before deployment. After fixes, run `/qa` again."
