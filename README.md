@@ -1,4 +1,4 @@
-# AI Coding Starter Kit
+# becoss Coding Framework
 
 > Build production-ready web apps faster with AI-powered Skills handling Requirements, Architecture, Development, QA, and Deployment.
 
@@ -445,4 +445,6 @@ Created by **becoss** – AI Product Engineer & Content Creator.
 
 ## License
 
-MIT License - feel free to use for your projects!
+MIT License – feel free to use for your projects.
+
+© becoss GmbH. All rights reserved.

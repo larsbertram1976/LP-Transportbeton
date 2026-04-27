@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AI Coding Starter Kit",
-  description: "Built with AI Agent Team System",
+  title: "becoss Coding Framework",
+  description: "AI-powered development workflow for Claude Code",
 };
 
 export default function RootLayout({
