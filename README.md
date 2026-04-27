@@ -4,39 +4,139 @@
 
 This template uses [Claude Code](https://docs.anthropic.com/en/docs/claude-code) with modern Skills, Rules, and Sub-Agents to provide a complete AI-powered development workflow.
 
-## Quick Start
+## Prerequisites & Setup
 
-### 1. Clone & Install
+This section lists **everything** you need to install and which accounts to create — split into "required to run the framework", "required for the AI workflow", and "optional per use case".
+
+### 1. System Requirements
+
+Install on your machine before anything else:
+
+| Tool | Version | Install via | Verify |
+|------|---------|-------------|--------|
+| **Node.js** | 20.x or 22.x (LTS) | [nodejs.org](https://nodejs.org) or [`nvm`](https://github.com/nvm-sh/nvm) | `node --version` |
+| **npm** | 10+ (ships with Node) | included with Node | `npm --version` |
+| **Git** | 2.x | [git-scm.com](https://git-scm.com) | `git --version` |
+| **Code editor** | latest | [VS Code](https://code.visualstudio.com) recommended | — |
+
+> **Why VS Code?** The Claude Code extension integrates directly into the editor (file diffs, inline tool runs, IDE selection context). The framework also works with Claude Code's standalone desktop app or CLI.
+
+### 2. Claude Code (the AI driver)
+
+Without Claude Code, the `/requirements`, `/architecture`, `/frontend`, `/backend`, `/qa`, `/deploy` workflows do not exist. Pick **one** install method:
+
+| Variant | When to use | Install |
+|---------|------------|---------|
+| **VS Code extension** | recommended for this framework | search "Claude Code" in the VS Code Marketplace and install |
+| **Desktop app** (macOS / Windows) | standalone GUI | download from [claude.ai/download](https://claude.ai/download) |
+| **CLI** | terminal-only / CI | `npm install -g @anthropic-ai/claude-code`, then run `claude` |
+
+Full install docs: [docs.anthropic.com/en/docs/claude-code](https://docs.anthropic.com/en/docs/claude-code).
+
+### 3. Anthropic Account (auth for Claude Code)
+
+Claude Code authenticates against your Anthropic account on first launch. Two options:
+
+- **Claude Pro / Max subscription** ([claude.ai](https://claude.ai)) — log in via the OAuth flow Claude Code shows on first run. Recommended for individuals.
+- **Anthropic API key** ([console.anthropic.com](https://console.anthropic.com)) — pay-as-you-go credits. Required for team/CI usage.
+
+You only need one. Both give access to the full skill workflow.
+
+### 4. Clone & Install the Framework
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/ai-coding-starter-kit.git my-project
+git clone https://github.com/larsbertram1976/becoss-coding-framework.git my-project
 cd my-project
 npm install
-npx playwright install chromium   # one-time: installs browser for E2E tests (~300MB)
+npx playwright install chromium   # one-time, ~300 MB, needed for E2E tests
 ```
 
-### 2. (Optional) Supabase Setup
+If you're forking this for a new project, point origin to your own repo:
+```bash
+git remote set-url origin https://github.com/YOUR_USERNAME/your-repo.git
+```
 
-If you need a backend:
+### 5. Optional Service Accounts
 
-1. Create Supabase Project: [supabase.com](https://supabase.com)
-2. Copy `.env.local.example` to `.env.local`
-3. Add your Supabase credentials
-4. Uncomment the Supabase client in `src/lib/supabase.ts`
+You only need these when a feature actually requires the service. Don't sign up for any of them upfront — wait until the workflow asks.
 
-Skip this step if you're building frontend-only (landing pages, portfolios, etc.)
+| Service | When you need it | Free tier | What you copy into `.env.local` |
+|---------|-----------------|-----------|---------------------------------|
+| [Supabase](https://supabase.com) | feature needs database, auth or storage | yes | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` |
+| [Vercel](https://vercel.com) | deploying the app | yes (Hobby) | — (env vars set in Vercel Dashboard) |
+| [GitHub](https://github.com) | version control + Vercel auto-deploy | yes | — |
+| [Sentry](https://sentry.io) | production error tracking | yes | `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_AUTH_TOKEN` |
+| [Upstash](https://upstash.com) | rate limiting on public APIs | 10k req/day | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` |
 
-### 3. Start Development
+Setup instructions for the production services live in [docs/production/](docs/production/) and are walked through automatically by the `/deploy` skill on first deployment.
+
+### 6. Supabase Setup (only if you need a backend)
+
+1. Create a project at [supabase.com](https://supabase.com)
+2. Copy the project URL + anon key from **Project Settings → API**
+3. `cp .env.local.example .env.local`, paste both values
+4. Uncomment the client in [src/lib/supabase.ts](src/lib/supabase.ts) (currently commented out behind a placeholder export)
+
+Skip entirely for frontend-only projects (landing pages, portfolios, brochure sites).
+
+### 7. Environment Variables — single source of truth
+
+The starter file [.env.local.example](.env.local.example) lists what's needed. Full reference (`.env.local` is gitignored — never commit secrets):
 
 ```bash
-npm run dev
+# --- Supabase (only if backend is used) ---
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+
+# --- Sentry (production error tracking) ---
+SENTRY_DSN=
+NEXT_PUBLIC_SENTRY_DSN=
+SENTRY_AUTH_TOKEN=
+
+# --- Upstash (production rate limiting, optional) ---
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+For production, mirror every variable into **Vercel Dashboard → Project → Settings → Environment Variables**.
 
-### 4. Initialize Your Project
+### 8. Setup Sequence (TL;DR)
 
-Open Claude Code and describe your project. The `/requirements` skill automatically detects that this is a fresh project and enters **Init Mode**:
+A linear walk-through — copy-paste-able for a fresh machine:
+
+```bash
+# 1. System tools (one-time, machine-wide)
+#    Install Node 20+, Git, VS Code via the links in step 1 above
+
+# 2. Claude Code (one-time, machine-wide)
+#    Install via VS Code Marketplace, desktop app, or:
+npm install -g @anthropic-ai/claude-code
+claude   # follow auth flow on first run
+
+# 3. Project (per project)
+git clone https://github.com/larsbertram1976/becoss-coding-framework.git my-project
+cd my-project
+npm install
+npx playwright install chromium
+
+# 4. (Optional) Backend
+cp .env.local.example .env.local        # then fill in Supabase keys
+
+# 5. Run
+npm run dev                              # http://localhost:3000
+```
+
+Now jump to **First Run** below to initialize your project with the AI workflow.
+
+---
+
+## First Run
+
+Once setup is done, this is how you actually use the framework.
+
+### Initialize Your Project
+
+Open Claude Code in this repo and describe what you want to build. The `/requirements` skill auto-detects a fresh project and enters **Init Mode**:
 
 ```
 /requirements I want to build a project management tool for small teams
@@ -44,30 +144,38 @@ where users can create projects, assign tasks, and track progress.
 ```
 
 The skill will:
-1. Ask interactive questions to clarify your vision, target users, and MVP scope
-2. Create your **Product Requirements Document** (`docs/PRD.md`)
+1. Ask interactive questions about vision, target users, and MVP scope
+2. Create your **Product Requirements Document** ([docs/PRD.md](docs/PRD.md))
 3. Break the project into individual features (Single Responsibility)
-4. Create all **feature specs** (`features/PROJ-1.md`, `PROJ-2.md`, etc.)
-5. Update **feature tracking** (`features/INDEX.md`)
+4. Create all **feature specs** (`features/PROJ-1.md`, `PROJ-2.md`, …)
+5. Update **feature tracking** ([features/INDEX.md](features/INDEX.md))
 6. Recommend which feature to build first
 
-You don't need to put everything in the first prompt - a brief description is enough. The skill asks follow-up questions interactively.
+A brief description is enough — the skill asks follow-ups interactively.
 
-### 5. Build Features
+### Build Features
 
-After project initialization, build features one at a time using skills:
+Build features one at a time using the skill chain:
 
 ```
 /architecture    Design the tech approach for features/PROJ-1-user-auth.md
-/frontend        Build the UI for features/PROJ-1-user-auth.md
-/backend         Build the API for features/PROJ-1-user-auth.md
-/qa              Test features/PROJ-1-user-auth.md
+/frontend        Build the UI
+/backend         Build the API (if needed)
+/qa              Test against acceptance criteria + security audit
 /deploy          Deploy to Vercel
 ```
 
 Each skill suggests the next step when it finishes. Handoffs are always user-initiated.
 
-To add more features later, run `/requirements` again - it detects the existing PRD and adds a single feature.
+To add features later, run `/requirements` again — it detects the existing PRD and adds a single feature.
+
+### Adding more shadcn/ui components
+
+35+ components are pre-installed under [src/components/ui/](src/components/ui/). Add more as needed:
+
+```bash
+npx shadcn@latest add [component-name]
+```
 
 ---
 
@@ -133,7 +241,7 @@ Every skill reads this file at start and updates it when done, preventing duplic
 ## Project Structure
 
 ```
-ai-coding-starter-kit/
+becoss-coding-framework/
 +-- CLAUDE.md                        <-- Auto-loaded project context
 +-- .claude/
 |   +-- settings.json                <-- Team permissions (committed)
@@ -177,39 +285,53 @@ ai-coding-starter-kit/
 
 ---
 
-## Getting Started
+## Testing Strategy
 
-### 1. Fill Out Your PRD
+This template uses a **two-layer testing strategy**: Vitest for isolated logic, Playwright for user-visible behavior. Both are wired up; tests are generated per feature by the `/qa` skill — no boilerplate to copy.
 
-Define your product vision in `docs/PRD.md`:
-- What are you building and why?
-- Who are the target users?
-- What features are on the roadmap?
+### Layer 1: Vitest (unit / integration)
 
-### 2. Build Your First Feature
+Fast, runs in `jsdom`. Co-locate test files next to the source they test (e.g. `src/hooks/useFeature.test.ts` beside `src/hooks/useFeature.ts`).
 
-Run `/requirements` with your feature idea. The skill will:
-- Ask interactive questions to clarify requirements
-- Create a feature spec in `features/PROJ-1-name.md`
-- Update `features/INDEX.md` with the new feature
-- Suggest running `/architecture` as the next step
+**Use Vitest when** the logic can be tested without a browser:
+- Custom hooks with non-trivial logic (storage access, reducers, debounced state)
+- Pure utility / transformation functions (sort, filter, reorder, parse)
+- Form validation logic extracted from components
+- API route handlers (request → response, mocked deps)
 
-### 3. Add shadcn/ui Components (as needed)
+**Skip Vitest for** purely presentational components or anything already covered end-to-end.
 
-35+ components are pre-installed. Add more as needed:
+Run: `npm test` (one-shot) or `npm run test:watch` (TDD).
+
+### Layer 2: Playwright (E2E)
+
+Real Chromium + Mobile Safari, hits a live `next dev` server. Tests live in [tests/](tests/) and are named per feature: `tests/PROJ-X-feature-name.spec.ts`.
+
+**Use Playwright when** the behavior is only meaningful through the UI:
+- One `test()` per acceptance criterion (the test reads like the user story)
+- Multi-page flows, navigation, auth, redirects
+- Form submission round-trips, optimistic UI, server responses
+- Responsive / cross-browser regressions
+
+These specs become the permanent regression suite — never delete passing E2E tests when a feature changes; update them.
+
+Run: `npm run test:e2e` (headless), `npm run test:e2e:ui` (debugger), `npm run test:all` (both layers).
+
+### When to write what — quick rule
+
+> If a senior dev could tell whether the code is correct **by reading it**, write a Vitest test.
+> If they'd have to **click through the app** to be sure, write a Playwright test.
+
+### How tests get written
+
+You don't write tests by hand. The `/qa` skill ([.claude/skills/qa/SKILL.md](.claude/skills/qa/SKILL.md)) reads a feature spec, runs through acceptance criteria + edge cases + security audit, then generates the unit and E2E tests it would have used to verify them. Run `/qa features/PROJ-X-name.md` after implementation.
+
+### One-time setup
+
+Playwright needs browser binaries (~300 MB) once per machine:
 ```bash
-npx shadcn@latest add [component-name]
+npx playwright install chromium
 ```
-
-### 4. Production Setup (first deployment)
-
-When you're ready to deploy, the `/deploy` skill guides you through:
-- Vercel setup and deployment
-- Error tracking with Sentry
-- Security headers configuration
-- Performance monitoring with Lighthouse
-
-See `docs/production/` for detailed setup guides.
 
 ---
 
@@ -315,10 +437,9 @@ npm run test:all     # Run both test suites
 
 ## Author
 
-Created by **Alex Sprogis** – AI Product Engineer & Content Creator.
+Created by **becoss** – AI Product Engineer & Content Creator.
 
-- [YouTube](https://www.youtube.com/@alex.sprogis)
-- [Website](https://alexsprogis.de)
+- [Website](https://becoss.de)
 
 ---
 

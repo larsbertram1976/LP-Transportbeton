@@ -1,4 +1,4 @@
-# AI Coding Starter Kit
+# becoss Coding Framework
 
 > A Next.js template with an AI-powered development workflow using specialized skills for Requirements, Architecture, Frontend, Backend, QA, and Deployment.
 

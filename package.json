@@ -1,7 +1,7 @@
 {
-  "name": "ai-coding-starter-kit",
+  "name": "becoss-coding-framework",
   "version": "1.0.0",
-  "description": "AI Coding Starter Kit with AI Agent Team System for Claude Code",
+  "description": "becoss Coding Framework — AI-powered development workflow for Claude Code",
   "private": true,
   "scripts": {
     "dev": "next dev",
